@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>Acct 4833 – Demo</title>
+<style>
+:root{
+  --brand:#3d5f7a; --brand-dark:#2d4557; --accent:#f8d664; --bg:#f6f6f6; --card:#fff;
+  --text:#1b2a2b; --muted:#5d6d6e; --line:#e3e8e8; --green:#e8f3e5; --greenText:#2c5a2e;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Open Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;background:var(--bg);color:var(--text)}
+.demo{background:#222;color:#fff;font-size:12px;text-align:center;padding:5px}
+header{background:var(--accent);color:#111;box-shadow:0 2px 6px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:space-between;padding:14px 28px}
+header .logo{font-weight:700;font-size:20px;letter-spacing:.5px}
+header nav button{background:none;border:0;color:#111;font:600 15px inherit;font-family:inherit;margin-left:18px;cursor:pointer}
+main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+h1{font-weight:300;font-size:36px;margin:10px 0 24px}
+.grid{display:grid;grid-template-columns:380px 1fr;gap:40px}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+h2{font-size:20px;margin:0 0 14px}
+.acct{background:var(--card);border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.1);overflow:hidden}
+.acct .top{padding:16px 20px;color:var(--brand);font-weight:600;font-size:14px;border-bottom:1px solid var(--line)}
+.ok{background:var(--green);color:var(--greenText);padding:12px 20px;font-size:15px}
+.bal{display:flex;gap:18px;padding:18px 20px}
+.cardimg{width:110px;height:70px;border-radius:8px;background:#111;color:#fff;font-size:10px;padding:8px;display:flex;flex-direction:column;justify-content:flex-end;flex-shrink:0}
+.cardimg b{font-size:11px;font-weight:600;letter-spacing:1px}
+.amt{font-size:24px;font-weight:600}
+.lbl{font-size:13px;color:var(--muted);margin-bottom:12px}
+.due{padding:0 20px 14px;font-size:22px}
+.due small{display:block;font-size:13px;color:var(--muted);margin-top:4px}
+.btn{display:block;width:calc(100% - 40px);margin:10px 20px;padding:14px;border:0;border-radius:30px;background:var(--accent);font:600 16px inherit;font-family:inherit;cursor:pointer}
+.btn:hover{filter:brightness(.95)}
+.auto{margin:12px 20px;padding:12px 14px;background:#eef5f5;border-radius:8px;display:flex;justify-content:space-between;font-size:14px}
+.auto button{background:none;border:0;color:var(--brand);font-weight:700;cursor:pointer;font-size:14px}
+.tabs{display:flex;background:#eef1f1;margin-top:14px}
+.tabs button{flex:1;padding:14px 0;border:0;background:none;color:var(--brand);font-weight:600;font-size:13px;cursor:pointer}
+.tabs button:hover{background:#e3e9e9}
+.tabs span{display:block;font-size:20px;margin-bottom:2px}
+.note{background:#436480;color:#fff;border-radius:10px;overflow:hidden}
+.note .h{display:flex;gap:14px;padding:18px 20px;font-weight:700}
+.note .h i{background:var(--accent);color:#222;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:20px;flex-shrink:0}
+.note p{margin:0;padding:0 20px 18px;font-size:15px}
+.note a{display:block;background:var(--brand-dark);color:var(--accent);padding:16px 20px;text-align:right;font-weight:700;cursor:pointer}
+
+/* panel */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:.25s;z-index:10}
+.overlay.on{opacity:1;pointer-events:auto}
+.panel{position:fixed;top:0;right:0;height:100%;width:min(560px,100%);background:#fff;transform:translateX(100%);transition:.3s;z-index:11;display:flex;flex-direction:column}
+.panel.on{transform:none}
+.panel .ph{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line);font-size:22px;font-weight:700}
+.panel .ph button{background:none;border:0;font-size:26px;cursor:pointer}
+.panel .body{flex:1;overflow:auto}
+.panel .pf{display:flex;justify-content:flex-end;align-items:center;gap:30px;padding:16px 24px;border-top:1px solid var(--line)}
+.panel .pf .close{background:none;border:0;font-weight:700;cursor:pointer;font-size:15px}
+.panel .pf .btn{width:auto;margin:0;padding:12px 24px}
+.mini{display:flex;gap:14px;align-items:center;padding:16px 24px;font-size:14px;color:var(--muted);border-bottom:1px solid var(--line)}
+
+/* activity */
+.view{display:none}.view.on{display:block}
+.back{background:none;border:0;color:var(--brand);font-weight:700;cursor:pointer;font-size:14px;margin-bottom:14px}
+.summary{background:#fff;border-radius:10px;padding:16px 22px;display:flex;flex-wrap:wrap;gap:30px;align-items:center;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.summary div b{display:block;font-size:22px;font-weight:600}
+.summary div span{font-size:12px;color:var(--muted)}
+.list{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden}
+.list .cap{background:#ddd;padding:14px 20px;font-weight:600}
+.row{display:grid;grid-template-columns:70px 120px 1fr auto 90px;gap:10px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);font-size:15px}
+.row.head{font-weight:700;color:var(--text);border-bottom:2px solid var(--line)}
+.row .ic{font-size:11px;color:var(--muted);text-align:center}
+.row .ic i{display:block;font-style:normal;font-size:20px;color:var(--brand)}
+.pill{background:var(--green);color:var(--greenText);border-radius:20px;padding:3px 12px;font-size:12px}
+.amount{text-align:right;font-weight:600}
+@media(max-width:700px){.row{grid-template-columns:50px 1fr auto;}.row .d{grid-column:2}.row .pill{display:none}.row.head .pill{display:none}}
+.simple{background:#fff;border-radius:10px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.simple li{padding:10px 0;border-bottom:1px solid var(--line);list-style:none}
+.simple ul{padding:0;margin:0}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#222;color:#fff;padding:12px 22px;border-radius:30px;transition:.3s;z-index:20;font-size:14px}
+.toast.on{transform:translateX(-50%)}
+
+/* polish */
+.i{width:28px;height:28px;display:block;margin:0 auto 4px}
+.m{width:20px;height:20px;vertical-align:-4px;margin-right:4px}
+header{padding:16px 32px}
+header .logo{font-weight:600;font-size:18px;letter-spacing:.2px}
+header nav button{font-weight:600;font-size:15px;padding:4px 0}
+main{padding:32px 24px 72px}
+h1{font-weight:300;font-size:40px;letter-spacing:-.5px;margin:6px 0 30px}
+h2{font-weight:700;font-size:21px;margin-bottom:16px}
+.acct{border-radius:14px;box-shadow:0 4px 18px rgba(30,50,60,.12)}
+.acct .top{font-size:14px;font-weight:700;padding:20px 22px}
+.ok{padding:14px 22px;font-size:16px}
+.bal{padding:22px 22px 14px;gap:20px}
+.amt{font-weight:600;font-size:25px;letter-spacing:-.3px}
+.lbl{font-size:13.5px;margin:2px 0 16px}
+.due{padding:6px 22px 20px;font-weight:300;font-size:26px}
+.due small{font-weight:400;font-size:14px}
+.btn{font-weight:700;letter-spacing:.2px;padding:16px;transition:filter .15s,transform .05s}
+.btn:active{transform:scale(.99)}
+.tabs{margin-top:18px;border-top:1px solid var(--line)}
+.tabs button{padding:16px 0 14px;font-family:inherit;font-weight:600;font-size:13px;color:var(--brand)}
+.tabs span{margin-bottom:6px}
+.note{border-radius:12px;box-shadow:0 4px 18px rgba(30,50,60,.18);border:1px solid #5b7b95}
+.note .h{font-size:18px;line-height:1.35;padding:22px 24px 14px}
+.note p{padding:6px 24px 24px;font-size:16px;line-height:1.5}
+.note a{font-size:17px;padding:18px 24px}
+.summary{border-radius:12px;padding:20px 26px;gap:36px;box-shadow:0 2px 10px rgba(30,50,60,.08)}
+.list{border-radius:12px;box-shadow:0 2px 10px rgba(30,50,60,.08)}
+.list .cap{background:#e0e0e0;font-weight:600;padding:16px 24px;font-size:16px}
+.row{grid-template-columns:76px 128px 1fr auto 104px 18px;gap:12px;padding:18px 24px;font-size:15.5px;transition:background .12s}
+.row:not(.head):hover{background:#f8fafb}
+.row.head{font-size:15px;font-weight:700;padding:18px 24px}
+.row .ic{font-size:12px;font-weight:600;color:var(--brand)}
+.row .ic .i{width:26px;height:26px;margin-bottom:3px}
+.row .d{font-weight:600}
+.row .chev{color:var(--brand);font-size:26px;line-height:1;text-align:right}
+.pill{font-weight:600}
+.amount{font-weight:700}
+.panel .ph{font-weight:700;font-size:22px;padding:22px 28px}
+.mini{padding:18px 28px}
+@media(max-width:700px){.row{grid-template-columns:56px 1fr auto 14px;gap:8px;padding:16px}.row .chev{grid-column:4}}
+</style>
+</head>
+<body>
+<div class="demo">DEMO &middot; Sample data only &middot; Not a real bank or account</div>
+<header>
+  <div class="logo">Acct 4833</div>
+  <nav><button onclick="location.href='https://www.google.com'">Sign Out</button><button onclick="toast('No new alerts')"><svg class="m" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.500"/><path d="M4 7l8 6 8-6"/></svg> Alerts</button></nav>
+</header>
+
+<main>
+<!-- HOME -->
+<section id="home" class="view on">
+  <h1 id="greet">Good Afternoon</h1>
+  <div class="grid">
+    <div>
+      <h2>Your Accounts</h2>
+      <div class="acct">
+        <div class="top">Account ending in 4833</div>
+        <div class="ok">&#10003; No minimum payment due.</div>
+        <div class="bal">
+          <div class="cardimg"><b>4833</b></div>
+          <div>
+            <div class="amt" id="bal">$1,295.55</div><div class="lbl">Current Balance</div>
+            <div class="amt">$18,704.00</div><div class="lbl">Available to spend</div>
+          </div>
+        </div>
+        <div class="due">No payment due<small>Total Min. Payment</small></div>
+        <button class="btn" onclick="toast('Payments are disabled in this demo')">Make a payment</button>
+        <div class="auto"><span>Not Enrolled in Autopay</span><button onclick="toast('Autopay enrollment is disabled in this demo')">Enroll</button></div>
+        <div class="tabs">
+          <button onclick="openPanel()"><span><svg class="i" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="24" height="20" rx="2.500"/><path d="M9 12h2M14 12h9M9 16h2M14 16h9M9 20h2M14 20h9"/></svg></span>Activity</button>
+          <button onclick="show('statements')"><span><svg class="i" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h10l6 6v17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M19 4v6h6M12 17h9M12 21h9"/></svg></span>Statements</button>
+          <button onclick="show('rewards')"><span><svg class="i" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="24" height="6" rx="1"/><path d="M6 17v10h20V17M16 11v16M16 11c-2-5-8-5-7-1.500.5 1.500 4 1.500 7 1.500zM16 11c2-5 8-5 7-1.500-.5 1.500-4 1.500-7 1.500z"/></svg></span>Rewards</button>
+          <button onclick="show('more')"><span><svg class="i" viewBox="0 0 32 32" fill="currentColor"><circle cx="7" cy="16" r="2"/><circle cx="16" cy="16" r="2"/><circle cx="25" cy="16" r="2"/></svg></span>More</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2>Notifications</h2>
+      <div class="note">
+        <div class="h"><i>!</i><span>Your annual net income requires attention</span></div>
+        <p>We need you to update your annual net income on the following account(s):</p>
+        <a onclick="toast('Demo only – nothing to update')">Update your income &rsaquo;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVITY -->
+<section id="activity" class="view">
+  <button class="back" onclick="show('home')">&lsaquo; ACCOUNT MANAGER</button>
+  <div class="summary">
+    <div><b>Account ending in 4833</b><span>Account</span></div>
+    <div><b>$1,295.55</b><span>Current Balance</span></div>
+    <div><b>$18,704.00</b><span>Available to spend</span></div>
+    <div><b>$0.00</b><span>Total Minimum Payment</span></div>
+    <div><b>Oct 16</b><span>Payment Due Date</span></div>
+  </div>
+  <div class="list" id="fullList"></div>
+</section>
+
+<section id="statements" class="view">
+  <button class="back" onclick="show('home')">&lsaquo; Back</button>
+  <div class="simple"><h2>Statements</h2><ul>
+    <li>September 2026 statement &ndash; sample</li><li>August 2026 statement &ndash; sample</li><li>July 2026 statement &ndash; sample</li></ul></div>
+</section>
+<section id="rewards" class="view">
+  <button class="back" onclick="show('home')">&lsaquo; Back</button>
+  <div class="simple"><h2>Rewards</h2><p style="font-size:34px;margin:6px 0">1,240 pts</p><p class="lbl">Sample balance. 1 point per $1 spent.</p></div>
+</section>
+<section id="more" class="view">
+  <button class="back" onclick="show('home')">&lsaquo; Back</button>
+  <div class="simple"><h2>More</h2><ul>
+    <li>Account Services</li><li>Manage Disputes</li><li>Promotions</li><li>Paperless Settings</li></ul></div>
+</section>
+</main>
+
+<div class="overlay" id="ov" onclick="closePanel()"></div>
+<aside class="panel" id="panel">
+  <div class="ph">Recent Activity <button onclick="closePanel()" aria-label="Close">&times;</button></div>
+  <div class="body">
+    <div class="mini"><div class="cardimg" style="width:80px;height:50px;padding:6px"><b style="font-size:9px">4833</b></div>Account ending in 4833</div>
+    <div class="list" style="border-radius:0;box-shadow:none" id="panelList"></div>
+  </div>
+  <div class="pf"><button class="close" onclick="closePanel()">Close</button><button class="btn" onclick="closePanel();show('activity')">View all activity</button></div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+
+// type: "p" purchase, "pay" payment. Negative amounts = payments.
+const tx = [
+  {d:"Oct 18, 2026", t:"p", desc:"PLAYSTATIONNETWORK SAN MATEO CA", amt:"$40.04"},
+  {d:"Oct 17, 2026", t:"p", desc:"AMAZON RETA* 1P4Q32VR3 SEATTLE WA", amt:"$50.00"},
+  {d:"Oct 16, 2026", t:"pay", desc:"PAYMENT", amt:"-$1987.15"},
+  {d:"Oct 16, 2026", t:"pay", desc:"PAYMENT", amt:"-$1200.00", panelOnly:true},
+  {d:"Oct 15, 2026", t:"pay", desc:"PAYMENT", amt:"-1,200.00", fullOnly:true},
+  {d:"Oct 15, 2026", t:"p", desc:"CLUB 004721 HOUSTON TXPURCHASE(S)", amt:"$267.42"},
+  {d:"Oct 9, 2026", t:"p", desc:"INDO PAK GROCERY & HAL HOUSTON TX", amt:"$0.01"},
+  {d:"Oct 8, 2026", t:"p", desc:"AMAZON MKTPL*599171NJ2 SEATTLE WA", amt:"$57.74"},
+  {d:"Oct 8, 2026", t:"p", desc:"AMAZON RETA* 591QQ6RF0 SEATTLE WA", amt:"$50.00"},
+  {d:"Oct 7, 2026", t:"p", desc:"AMAZON PRIME*4T1377OG3 SEATTLE WA", amt:"$16.23"},
+  {d:"Oct 6, 2026", t:"p", desc:"WMART.COM BENTONVILLE AR", amt:"$11.75"},
+  {d:"Oct 3, 2026", t:"p", desc:"HCTRA EZ TAG REBILL HOUSTON TX", amt:"$40.00"},
+  {d:"Oct 1, 2026", t:"p", desc:"CLUB 004721 HOUSTON TXPURCHASE(S)", amt:"$25.19"},
+  {d:"Oct 1, 2026", t:"p", desc:"CLUB 004721 HOUSTON TXPURCHASE(S)", amt:"$579.25"},
+  {d:"Sep 25, 2026", t:"p", desc:"LUCKYAI LONDON GB", amt:"$12.95"},
+  {d:"Sep 24, 2026", t:"p", desc:"CIRCLEK #2741443 HOUSTON TX", amt:"$60.04"},
+  {d:"Sep 24, 2026", t:"p", desc:"AMAZON RETA* 5X9IM5J60 SEATTLE WA", amt:"$50.00"},
+  {d:"Sep 21, 2026", t:"p", desc:"NETFLIX.COM LOS GATOS CA", amt:"$21.64"},
+  {d:"Sep 19, 2026", t:"p", desc:"AMAZON PRIME*HN72889S3 SEATTLE WA", amt:"$16.23"},
+  {d:"Sep 15, 2026", t:"p", desc:"SLING.COM ENGLEWOOD CO", amt:"$10.83"},
+  {d:"Sep 14, 2026", t:"p", desc:"HCTRA EZ TAG REBILL HOUSTON TX", amt:"$40.00"},
+  {d:"Sep 14, 2026", t:"p", desc:"AMAZON RETA* 5L4PG1SF0 SEATTLE WA", amt:"$100.00"},
+  {d:"Sep 14, 2026", t:"p", desc:"AMAZON RETA* 5L9BN4S50 SEATTLE WA", amt:"$50.00"},
+  {d:"Sep 14, 2026", t:"pay", desc:"PAYMENT", amt:"-$7051.52"},
+  {d:"Sep 12, 2026", t:"p", desc:"AMAZON MKTPL*5L90H71U0 SEATTLE WA", amt:"$32.41"},
+  {d:"Sep 11, 2026", t:"r", desc:"LONE STAR COLLEGE/EPAY THE WOODLANDSTX", amt:"-$129.00"},
+  {d:"Sep 11, 2026", t:"r", desc:"LONE STAR COLLEGE/EPAY THE WOODLANDSTX", amt:"-$72.00"},
+  {d:"Sep 11, 2026", t:"p", desc:"AMAZON MKTPL*5L85Q0LC2 SEATTLE WA", amt:"$162.36"},
+  {d:"Sep 10, 2026", t:"p", desc:"SQ *FRAZIER FOOT AND A TOMBALL TX", amt:"$33.54"},
+  {d:"Sep 10, 2026", t:"p", desc:"AMAZON RETA* 5L1KN7FE0 SEATTLE WA", amt:"$75.00"},
+  {d:"Sep 9, 2026", t:"p", desc:"NEWBALANCE.COM BOSTON MA", amt:"$173.19"},
+  {d:"Sep 9, 2026", t:"p", desc:"AMAZON RETA* 537YT3KQ0 SEATTLE WA", amt:"$100.00"},
+  {d:"Sep 7, 2026", t:"p", desc:"AMAZON PRIME*4E5GI12Z3 SEATTLE WA", amt:"$16.23"},
+  {d:"Sep 7, 2026", t:"p", desc:"AMAZON RETA* 5L3HY5FJ1 SEATTLE WA", amt:"$50.00"},
+  {d:"Sep 6, 2026", t:"p", desc:"AMAZON RETA* 536CQ21V2 SEATTLE WA", amt:"$25.00"},
+  {d:"Sep 5, 2026", t:"p", desc:"AMAZON RETA* 5367N1TJ2 SEATTLE WA", amt:"$50.00"},
+  {d:"Sep 4, 2026", t:"p", desc:"WOODLANDS - BERKELEY E SHENANDOAH TX", amt:"$295.69"},
+  {d:"Sep 4, 2026", t:"p", desc:"AMAZON RETA* 536W59XJ1 SEATTLE WA", amt:"$50.00"},
+  {d:"Sep 3, 2026", t:"p", desc:"SQ *FRAZIER FOOT AND A TOMBALL TX", amt:"$66.33"},
+  {d:"Sep 3, 2026", t:"p", desc:"AMAZON RETA* 534612TW1 SEATTLE WA", amt:"$50.00"},
+  {d:"Sep 3, 2026", t:"p", desc:"AMAZON RETA* 5Q3SC79L2 SEATTLE WA", amt:"$50.00"},
+  {d:"Sep 3, 2026", t:"p", desc:"AMAZON RETA* 5Q3DD5RI2 SEATTLE WA", amt:"$50.00"},
+  {d:"Sep 2, 2026", t:"p", desc:"AMAZON MKTPL*5Q33T26B0 SEATTLE WA", amt:"$28.13"},
+  {d:"Aug 31, 2026", t:"p", desc:"INDO PAK GROCERY & HAL HOUSTON TX", amt:"$0.10"},
+  {d:"Aug 31, 2026", t:"p", desc:"AMAZON MKTPL*5Q1LV3621 SEATTLE WA", amt:"$10.81"},
+  {d:"Aug 31, 2026", t:"p", desc:"AMAZON MKTPL*5Q5DT30J2 SEATTLE WA", amt:"$14.05"},
+  {d:"Aug 29, 2026", t:"p", desc:"AMAZON RETA* 5Q24L4CO2 SEATTLE WA", amt:"$75.00"},
+  {d:"Aug 28, 2026", t:"p", desc:"AMAZON RETA* 5O7H88W02 SEATTLE WA", amt:"$42.50"},
+  {d:"Aug 25, 2026", t:"p", desc:"SHELL OIL 12529538006 SPRING TX", amt:"$26.07"},
+  {d:"Aug 25, 2026", t:"p", desc:"AMAZON RETA* 5O0WF2052 SEATTLE WA", amt:"$50.00"},
+  {d:"Aug 25, 2026", t:"p", desc:"LUCKYAI LONDON GB", amt:"$12.95"},
+  {d:"Aug 24, 2026", t:"p", desc:"AMAZON RETA* 5O62C53W2 SEATTLE WA", amt:"$200.00"},
+  {d:"Aug 23, 2026", t:"p", desc:"ISHINE CAR WASH AND DE SPRING TX", amt:"$59.99"},
+  {d:"Aug 22, 2026", t:"p", desc:"AMAZON MKTPL*5A81M4YQ2 SEATTLE WA", amt:"$32.46"},
+  {d:"Aug 22, 2026", t:"p", desc:"AMAZON RETA* 5A5786YA2 SEATTLE WA", amt:"$50.00"},
+  {d:"Aug 21, 2026", t:"p", desc:"NETFLIX.COM LOS GATOS CA", amt:"$21.64"},
+  {d:"Aug 21, 2026", t:"p", desc:"AMAZON RETA* 5A0SO8Y01 SEATTLE WA", amt:"$25.00"},
+  {d:"Aug 19, 2026", t:"p", desc:"AMAZON MKTPL*5A9L12BT0 SEATTLE WA", amt:"$40.04"},
+  {d:"Aug 19, 2026", t:"p", desc:"AMAZON PRIME*5370A5MY3 SEATTLE WA", amt:"$16.23"},
+  {d:"Aug 19, 2026", t:"p", desc:"PAYPAL *2CHECKOUTCO 880000008 OH", amt:"$60.00"},
+];
+const SV={card:`<svg class="i" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="24" height="18" rx="2.5"/><path d="M4 12.5h24M9 20h3M15 20h3"/></svg>`,refund:`<svg class="i" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4v8M18.5 6.2c-.6-.6-1.5-.9-2.5-.9-1.5 0-2.600.8-2.600 2s1 1.700 2.600 2.100 2.600.9 2.600 2.100-1.100 2-2.600 2c-1 0-2-.4-2.600-1"/><path d="M3 15l4 1 3 6 5 1.500M29 15l-4 1-3 6-5 1.500M3 15v9l5 3M29 15v9l-5 3"/></svg>`};
+const icon = t => t==='pay' ? '' : t==='r' ? SV.refund+'Refund' : SV.card+'Purchase';
+function rows(list){
+  return '<div class="cap">Completed</div>'+
+  '<div class="row head"><span></span><span>Date</span><span>Description</span><span class="pill" style="background:none"></span><span class="amount">Amount</span><span></span></div>'+
+  list.map(x=>`<div class="row"><span class="ic">${icon(x.t)}</span><span class="d">${x.d}</span><span>${x.desc}</span><span class="pill">&#10003; Completed</span><span class="amount">${x.amt}</span><span class="chev">&rsaquo;</span></div>`).join('');
+}
+document.getElementById('fullList').innerHTML = rows(tx.filter(x=>!x.panelOnly));
+document.getElementById('panelList').innerHTML = rows(tx.filter(x=>!x.fullOnly).slice(0,8));
+
+const g=new Date().getHours();
+document.getElementById('greet').textContent = g<12?'Good Morning':g<18?'Good Afternoon':'Good Evening';
+
+function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));window.scrollTo(0,0)}
+function openPanel(){ov.classList.add('on');panel.classList.add('on')}
+function closePanel(){ov.classList.remove('on');panel.classList.remove('on')}
+let tm;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tm);tm=setTimeout(()=>t.classList.remove('on'),2200)}
+</script>
+</body>
+</html>
